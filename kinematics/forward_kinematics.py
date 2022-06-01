@@ -22,7 +22,7 @@ import sys
 sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', 'joint_control'))
 
 from numpy.matlib import matrix, identity
-
+import numpy as np
 from recognize_posture import PostureRecognitionAgent
 
 
@@ -36,9 +36,13 @@ class ForwardKinematicsAgent(PostureRecognitionAgent):
         self.transforms = {n: identity(4) for n in self.joint_names}
 
         # chains defines the name of chain and joints of the chain
-        self.chains = {'Head': ['HeadYaw', 'HeadPitch']
-                       # YOUR CODE HERE
-                       }
+        self.chains = {
+            'Head': ['HeadYaw', 'HeadPitch'],
+            'LArm': ['LShoulderPitch', 'LShoulderRoll', 'LElbowYaw', 'LElbowRoll', 'LWristYaw'],
+            'LLeg': ['LHipYawPitch', 'LHipRoll', 'LHipPitch', 'LKneePitch', 'LAnklePitch', 'LAnkleRoll'],
+            'RLeg': ['RHipYawPitch', 'RhipRoll', 'RHipPitch', 'RKneePitch', 'RAnklePitch', 'RAnkleRoll'],
+            'RArm': ['RShoulderPitch', 'RShoulderRoll', 'RElbowYaw', 'RElbowRoll', 'RWristYaw']
+        }
 
     def think(self, perception):
         self.forward_kinematics(perception.joint)
@@ -54,6 +58,21 @@ class ForwardKinematicsAgent(PostureRecognitionAgent):
         '''
         T = identity(4)
         # YOUR CODE HERE
+        xAxis = ['RElbowYaw', 'LElbowYaw', 'LHipRoll', 'LAnkleRoll', 'RHipRoll', 'RAnkleRoll']
+        yAxis = ['HeadPitch', 'RShoulderPitch', 'LShoulderPitch', 'LHipPitch', 'LKneePitch', 'LAnklePitch', 'RHipPitch', 'RKneePitch', 'RAnklePitch']
+        zAxis = ['HeadYaw', 'RElbowYaw', 'RShoulderRoll', 'RElbowRoll', 'LShoulderRoll', 'LElbowRoll']
+        sin = np.sin(joint_angle)
+        cos = np.cos(joint_angle)
+
+        if joint_name in xAxis:
+            Tx = np.array([[1, 0, 0, 0], [0, cos, -sin, 0], [0, sin, cos, 0], [0, 0, 0, 1]])
+            T = np.dot(T, Tx)
+        else if joint_name in yAxis:
+            Ty = np.array([[cos, 0, sin, 0], [0, 1, 0, 0], [-sin, 0, cos, 0], [0, 0, 0, 1]])
+            T = np.dot(T, Ty)
+        else if joint_name in zAxis:
+            Tz = np.array([[cos, -sin, 0, 0], [sin, cos, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
+            T = np.dot(T, Tz)
 
         return T
 
