@@ -37,13 +37,11 @@ class PostureRecognitionAgent(AngleInterpolationAgent):
         posture = 'unknown'
         # YOUR CODE HERE
         jointNames = ['RHipYawPitch', 'RHipPitch', 'RHipRoll', 'RKneePitch', 'LHipYawPitch', 'LHipPitch', 'LHipRoll', 'LKneePitch']
-        postures = ['Back', 'Belly', 'Crouch', 'Frog', 'HeadBack', 'Knee', 'Left', 'Right', 'Sit', 'Stand', 'StandInit']
-        ang = ['AngleX', 'AngleY']
-        classes = listdir(ROBOT_POSE_DATA_DIR)
+        classes = ['Back', 'Belly', 'Crouch', 'Frog', 'HeadBack', 'Knee', 'Left', 'Right', 'Sit', 'Stand', 'StandInit']
         data = []
 
-        for i in jointNames:
-            data.append(perception.joint[i])
+        for joint in jointNames:
+            data.append(perception.joint[joint])
 
         data.append(perception.imu[0])
         data.append(perception.imu[1])
