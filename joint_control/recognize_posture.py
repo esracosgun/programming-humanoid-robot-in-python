@@ -12,7 +12,12 @@
 
 from angle_interpolation import AngleInterpolationAgent
 from keyframes import hello
+import pickle 
+import numpy as np
+from os import listdir
 
+
+ROBOT_POSE_DATA_DIR = 'robot_pose_data'
 
 class PostureRecognitionAgent(AngleInterpolationAgent):
     def __init__(self, simspark_ip='localhost',
@@ -22,7 +27,7 @@ class PostureRecognitionAgent(AngleInterpolationAgent):
                  sync_mode=True):
         super(PostureRecognitionAgent, self).__init__(simspark_ip, simspark_port, teamname, player_id, sync_mode)
         self.posture = 'unknown'
-        self.posture_classifier = None  # LOAD YOUR CLASSIFIER
+        self.posture_classifier = pickle.load(open('robot_pose.pkl', 'rb'))  # LOAD YOUR CLASSIFIER
 
     def think(self, perception):
         self.posture = self.recognize_posture(perception)
@@ -31,6 +36,20 @@ class PostureRecognitionAgent(AngleInterpolationAgent):
     def recognize_posture(self, perception):
         posture = 'unknown'
         # YOUR CODE HERE
+        jointNames = ['RHipYawPitch', 'RHipPitch', 'RHipRoll', 'RKneePitch', 'LHipYawPitch', 'LHipPitch', 'LHipRoll', 'LKneePitch']
+        postures = ['Back', 'Belly', 'Crouch', 'Frog', 'HeadBack', 'Knee', 'Left', 'Right', 'Sit', 'Stand', 'StandInit']
+        ang = ['AngleX', 'AngleY']
+        classes = listdir(ROBOT_POSE_DATA_DIR)
+        data = []
+
+        for i in jointNames:
+            data.append(perception.joint[i])
+
+        data.append(perception.imu[0])
+        data.append(perception.imu[1])
+
+        predicted = self.posture_classifier.predict([data])[0]
+        posture = classes[predicted]
 
         return posture
 

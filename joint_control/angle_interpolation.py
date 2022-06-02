@@ -21,7 +21,7 @@
 
 
 from pid import PIDAgent
-from keyframes import leftBackToStand
+from keyframes import hello
 import numpy as np
 from scipy.interpolate import CubicSpline
 
@@ -50,17 +50,16 @@ class AngleInterpolationAgent(PIDAgent):
             self.starttime = perception.time
 
         time = perception.time - self.starttime
-
+        v = []
         for i in range(len(names)):
-                name = names[i]
-                t = times[i]
-                v = []
+            name = names[i]
+            t = times[i]
+            v = []
+            for j in range(len(t)):
+                v.append(keys[i][j][0])
 
-                for j in range(len(t)):
-                    v.append(keys[i][j][0])
-                    
-                spline = CubicSpline(t,v)
-                target_joints[name] = spline(time)
+            spline = CubicSpline(t,v)
+            target_joints[name] = spline(time)
 
         if "LHipYawPitch" in target_joints:
             target_joints["RHipYawPitch"] = target_joints["LHipYawPitch"]
@@ -69,6 +68,6 @@ class AngleInterpolationAgent(PIDAgent):
 
 if __name__ == '__main__':
     agent = AngleInterpolationAgent()
-    agent.keyframes = leftBackToStand()  # CHANGE DIFFERENT KEYFRAMES
+    agent.keyframes = hello()  # CHANGE DIFFERENT KEYFRAMES
     agent.run()
 
