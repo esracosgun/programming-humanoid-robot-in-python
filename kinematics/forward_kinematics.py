@@ -40,7 +40,7 @@ class ForwardKinematicsAgent(PostureRecognitionAgent):
             'Head': ['HeadYaw', 'HeadPitch'],
             'LArm': ['LShoulderPitch', 'LShoulderRoll', 'LElbowYaw', 'LElbowRoll', 'LWristYaw'],
             'LLeg': ['LHipYawPitch', 'LHipRoll', 'LHipPitch', 'LKneePitch', 'LAnklePitch', 'LAnkleRoll'],
-            'RLeg': ['RHipYawPitch', 'RhipRoll', 'RHipPitch', 'RKneePitch', 'RAnklePitch', 'RAnkleRoll'],
+            'RLeg': ['RHipYawPitch', 'RHipRoll', 'RHipPitch', 'RKneePitch', 'RAnklePitch', 'RAnkleRoll'],
             'RArm': ['RShoulderPitch', 'RShoulderRoll', 'RElbowYaw', 'RElbowRoll', 'RWristYaw']
         }
         self.links = {
@@ -58,14 +58,14 @@ class ForwardKinematicsAgent(PostureRecognitionAgent):
             'LAnklePitch': [0, 0, -102.90],
             'LAnkleRoll': [0, 0, 0],
             'RShoulderPitch': [0, 98, 100],
-            'RShoulderRoll' [0, 0, 0],
+            'RShoulderRoll': [0, 0, 0],
             'RElbowYaw': [0, 0, 0],
             'RElbowRoll': [0, 0, 0],
             'RWristYaw': [55.95, 0, 0],
             'RHipYawPitch': [0, 50, -85],
             'RHipRoll': [0, 0, 0],
             'RHipPitch': [0, 0, 0],
-            'RKneePitch' [0, 0, -100],
+            'RKneePitch': [0, 0, -100],
             'RAnklePitch': [0, 0, -102.90],
             'RAnkleRoll': [0, 0, 0]
         }
@@ -93,15 +93,16 @@ class ForwardKinematicsAgent(PostureRecognitionAgent):
         if joint_name in xAxis:
             Tx = np.array([[1, 0, 0, 0], [0, cos, -sin, 0], [0, sin, cos, 0], [0, 0, 0, 1]])
             T = np.dot(T, Tx)
-        else if joint_name in yAxis:
+        elif joint_name in yAxis:
             Ty = np.array([[cos, 0, sin, 0], [0, 1, 0, 0], [-sin, 0, cos, 0], [0, 0, 0, 1]])
             T = np.dot(T, Ty)
-        else if joint_name in zAxis:
+        elif joint_name in zAxis:
             Tz = np.array([[cos, -sin, 0, 0], [sin, cos, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
             T = np.dot(T, Tz)
-
         # TODO: LHipYawPitch and RHipYawPitch
-        T[:,-1][:-1] = self.links[joint_name]
+
+        for pos in range(3):
+            T[:,-1][pos] = self.links[joint_name][pos]
 
         return T
 
@@ -120,7 +121,7 @@ class ForwardKinematicsAgent(PostureRecognitionAgent):
                     Tl = self.local_trans(joint, angle)
                     T = np.dot(T,Tl)
                     self.transforms[joint] = T
-                    
+
 if __name__ == '__main__':
     agent = ForwardKinematicsAgent()
     agent.run()
