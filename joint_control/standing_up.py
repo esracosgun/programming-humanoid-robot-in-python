@@ -17,17 +17,18 @@ class StandingUpAgent(PostureRecognitionAgent):
     def standing_up(self):
         posture = self.posture
         # YOUR CODE HERE
-        if posture == 'Belly':
-            print('Belly')
-            self.keyframes = leftBellyToStand()
-        elif posture == 'Back' or posture == 'Left' or posture == 'Headback':
-            print('Back')
-            self.keyframes = leftBackToStand()
-        elif posture == "Right" or posture == 'Frog' or posture == 'Sit':
+        
+        if posture == 'Back' or posture == 'Right':
             self.keyframes = rightBackToStand()
-            print('Right')
-        else:
+        elif posture == 'Belly':
             self.keyframes = rightBellyToStand()
+        elif posture == "Left":
+            self.keyframes = leftBackToStand()
+        elif posture == 'Stand':
+            self.keyframes = hello()
+        else:
+            self.keyframes = leftBackToStand()
+        
         
 class TestStandingUpAgent(StandingUpAgent):
     '''this agent turns off all motor to falls down in fixed cycles

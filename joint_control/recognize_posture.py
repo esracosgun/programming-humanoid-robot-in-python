@@ -16,7 +16,6 @@ import pickle
 import numpy as np
 from os import listdir
 
-
 ROBOT_POSE_DATA_DIR = 'robot_pose_data'
 
 class PostureRecognitionAgent(AngleInterpolationAgent):
@@ -27,8 +26,8 @@ class PostureRecognitionAgent(AngleInterpolationAgent):
                  sync_mode=True):
         super(PostureRecognitionAgent, self).__init__(simspark_ip, simspark_port, teamname, player_id, sync_mode)
         self.posture = 'unknown'
-        self.posture_classifier = pickle.load(open('robot_pose.pkl', 'rb'))  # LOAD YOUR CLASSIFIER
-
+        self.posture_classifier = pickle.load(open('robot_pose.pkl', 'rb'))   # LOAD YOUR CLASSIFIER
+                               
     def think(self, perception):
         self.posture = self.recognize_posture(perception)
         return super(PostureRecognitionAgent, self).think(perception)
@@ -37,7 +36,8 @@ class PostureRecognitionAgent(AngleInterpolationAgent):
         posture = 'unknown'
         # YOUR CODE HERE
         jointNames = ['RHipYawPitch', 'RHipPitch', 'RHipRoll', 'RKneePitch', 'LHipYawPitch', 'LHipPitch', 'LHipRoll', 'LKneePitch']
-        classes = ['Back', 'Belly', 'Crouch', 'Frog', 'HeadBack', 'Knee', 'Left', 'Right', 'Sit', 'Stand', 'StandInit']
+        #classes = ['Back', 'Belly', 'Crouch', 'Frog', 'HeadBack', 'Knee', 'Left', 'Right', 'Sit', 'Stand', 'StandInit']
+        classes = listdir(ROBOT_POSE_DATA_DIR)
         data = []
 
         for joint in jointNames:

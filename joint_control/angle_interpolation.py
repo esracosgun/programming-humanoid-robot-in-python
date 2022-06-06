@@ -58,12 +58,14 @@ class AngleInterpolationAgent(PIDAgent):
             for j in range(len(t)):
                 v.append(keys[i][j][0])
 
-            spline = CubicSpline(t,v)
-            target_joints[name] = spline(time)
+            #spline = CubicSpline(t,v)
+            #time = perception.time - self.starttime
+            #target_joints[name] = spline(time)
+            #time = perception.time - self.starttime
+            target_joints[name] = np.interp(time,t,v)
 
-        if "LHipYawPitch" in target_joints:
-            target_joints["RHipYawPitch"] = target_joints["LHipYawPitch"]
-
+        #target_joints["RHipYawPitch"] = target_joints["LHipYawPitch"]
+        self.target_joints['RHipYawPitch'] = self.target_joints['LHipYawPitch']
         return target_joints
 
 if __name__ == '__main__':
