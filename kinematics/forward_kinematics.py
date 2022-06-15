@@ -24,6 +24,7 @@ sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', '
 from numpy.matlib import matrix, identity
 import numpy as np
 from recognize_posture import PostureRecognitionAgent
+from keyframes import hello
 
 
 class ForwardKinematicsAgent(PostureRecognitionAgent):
@@ -124,4 +125,5 @@ class ForwardKinematicsAgent(PostureRecognitionAgent):
 
 if __name__ == '__main__':
     agent = ForwardKinematicsAgent()
+    agent.keyframes = hello() 
     agent.run()
