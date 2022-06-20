@@ -24,7 +24,6 @@ sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', '
 from numpy.matlib import matrix, identity
 import numpy as np
 from recognize_posture import PostureRecognitionAgent
-from keyframes import hello
 
 
 class ForwardKinematicsAgent(PostureRecognitionAgent):
@@ -112,18 +111,14 @@ class ForwardKinematicsAgent(PostureRecognitionAgent):
 
         :param joints: {joint_name: joint_angle}
         '''
-        for chain_joints in self.chains.values():
+        for joint in joints.keys():
             T = identity(4)
-            for joint in chain_joints:
-                if joint in ['LWristYaw', 'RWristYaw']:
-                    angle = 0
-                else:
-                    angle = joints[joint]
-                    Tl = self.local_trans(joint, angle)
-                    T = np.dot(T,Tl)
-                    self.transforms[joint] = T
+            angle = joints[joint]
+            Tl = self.local_trans(joint, angle)
+            T = np.dot(T,Tl)
+            self.transforms[joint] = T
+        
 
 if __name__ == '__main__':
     agent = ForwardKinematicsAgent()
-    agent.keyframes = hello() 
     agent.run()
