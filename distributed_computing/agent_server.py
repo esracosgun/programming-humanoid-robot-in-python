@@ -73,7 +73,7 @@ if __name__ == '__main__':
     server.register_introspection_functions()
     server.register_multicall_functions()
 
-    thread = threading.Thread(target=server-serve_forever)
+    thread = threading.Thread(target=server.serve_forever)
     thread.start()
     print('Serving XML-RPC on localhost port 8000')
 
