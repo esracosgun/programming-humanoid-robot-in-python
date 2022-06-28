@@ -33,8 +33,8 @@ class ServerAgent(InverseKinematicsAgent):
     def get_angle(self, joint_name):
         '''get sensor value of given joint'''
         # YOUR CODE HERE
-        return self.target_joints.get(joint_name)
-    
+        #return self.target_joints.get(joint_name)
+        return self.perception.joint[joint_name]
     def set_angle(self, joint_name, angle):
         '''set target angle of joint for PID controller
         '''
@@ -57,7 +57,7 @@ class ServerAgent(InverseKinematicsAgent):
         '''get transform with given name
         '''
         # YOUR CODE HERE
-        return self.transfroms.get(name)
+        return self.transfroms[name]
 
     def set_transform(self, effector_name, transform):
         '''solve the inverse kinematics and control joints use the results
