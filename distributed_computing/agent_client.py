@@ -35,7 +35,7 @@ class ClientAgent(object):
     # YOUR CODE HERE
     def __init__(self):
         self.post = PostHandler(self)
-        self.rpcProxy = xmlrpc.client.ServerProxy("http://localhost:8000/")
+        self.rpcProxy = xmlrpc.client.ServerProxy("http://localhost:8000", allow_none=True)
     
     def get_angle(self, joint_name):
         '''get sensor value of given joint'''
@@ -76,6 +76,6 @@ if __name__ == '__main__':
     agent = ClientAgent()
     # TEST CODE HERE
     print("start")
-    agent.get_angle("HeadYaw")
+    print(agent.get_angle("HeadYaw"))
 
 

@@ -29,7 +29,17 @@ class ServerAgent(InverseKinematicsAgent):
     '''ServerAgent provides RPC service
     '''
     # YOUR CODE HERE
-    
+    def __init__(self):
+        super(ServerAgent, self).__init__()
+        self.server = SimpleXMLRPCServer(("localhost", 8000), requestHandler=RequestHandler, allow_none=True)
+        self.server.register_introspection_functions()
+        self.server.register_multicall_functions()
+        self.server.register_instance(self)
+
+        self.thread = threading.Thread(target=self.server.serve_forever)
+        self.thread.start()
+        print('Serving XML-RPC on localhost port 8000')
+        
     def get_angle(self, joint_name):
         '''get sensor value of given joint'''
         # YOUR CODE HERE
@@ -67,7 +77,7 @@ class ServerAgent(InverseKinematicsAgent):
 
 if __name__ == '__main__':
     agent = ServerAgent()
-
+    '''
     server = SimpleXMLRPCServer(("localhost", 8000), requestHandler=RequestHandler)
     server.register_instance(agent)
     server.register_introspection_functions()
@@ -76,6 +86,6 @@ if __name__ == '__main__':
     thread = threading.Thread(target=server.serve_forever)
     thread.start()
     print('Serving XML-RPC on localhost port 8000')
-
+    '''
     agent.run()
 
